@@ -31,13 +31,19 @@
 
 #include<pybind11/embed.h>
 namespace py = pybind11;
+using namespace py::literals;
 
 #include<SFML/Graphics.hpp>
 
 #include<shlwapi.h>
 #pragma comment(lib, "Shlwapi.lib")
 
+#include "resource.h"
 
+
+#define PY_ICO 0
+#define PYD_ICO 1
+#define PYC_ICO 2
 
 inline std::string FGetParent(std::string path)
 {
@@ -81,12 +87,64 @@ inline std::vector<std::string> FListDir(const std::string& directory)
     return dir_list;
 }
 
+inline std::string FAbsolute(std::string path)
+{
+    DWORD fsize = 0;
+    LPSTR file;
+
+    LPSTR absolutePath = new CHAR[MAX_PATH];
+    if (!GetFullPathNameA(path.c_str(), MAX_PATH, absolutePath, &file))
+    {
+        return path;
+    }
+    return  std::string(absolutePath);
+}
+
 template<typename T>
-T FGetExtension(T const& s)
+inline T FGetExtension(T const& s)
 {
     if (s.find_last_of('.') == std::string::npos)
     {
         return s;
     }
     return s.substr(s.find_last_of('.'));
+}
+
+inline std::vector<std::string> split(std::string str,std::string delimiters)
+{
+    std::string::size_type lastPos = str.find_first_not_of(delimiters, 0);
+    std::string::size_type pos = str.find_first_of(delimiters, lastPos);
+
+    std::vector<std::string> parts;
+
+    while (std::string::npos != pos || std::string::npos != lastPos) {
+        
+        parts.push_back(str.substr(lastPos, pos - lastPos));
+        lastPos = str.find_first_not_of(delimiters, pos);
+        pos = str.find_first_of(delimiters, lastPos);
+    }
+
+    return parts;
+}
+
+inline wxColor GetColor(std::string c)
+{
+    if (c[0] == '#')
+    {
+        return wxColor(c);
+    }
+    else {
+        auto vals = split(c, ",");
+        while(vals.size() < 4)
+        {
+            vals.push_back("255");
+        }
+        wxColor c = wxColor();
+        c.Set(
+            std::atoi(vals[0].c_str()),
+            std::atoi(vals[1].c_str()),
+            std::atoi(vals[2].c_str()),
+            std::atoi(vals[3].c_str()));
+        return c;
+    }
 }

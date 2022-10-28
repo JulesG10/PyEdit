@@ -9,10 +9,10 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments> --debug "./PE-1/main.py"</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-d "./PE-1/main.py"</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">
-    <LocalDebuggerCommandArguments> --debug "./PE-1/main.py"</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-d "./PE-1/main.py"</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

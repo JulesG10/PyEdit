@@ -3,6 +3,7 @@
 ProjectManager::ProjectManager(wxWindow* parent, std::function<void(std::string)> OnOpenFile) : wxTreeCtrl(parent)
 {
     this->OpenFile = OnOpenFile;
+    this->SetSize(wxSize(200, 0));
 }
 
 ProjectManager::~ProjectManager()
@@ -24,7 +25,19 @@ void ProjectManager::CreateFileTree(std::string path, wxTreeItemId root)
             this->CreateFileTree(file, childRoot);
         }
         else {
-            wxTreeItemId id = this->AppendItem(root, FGetName(file, true));
+            int imageId = -1;
+            std::string ext = FGetExtension(file);
+            if (ext == ".py")
+            {
+                imageId = PY_ICO;
+            }
+            else if (ext == ".pyedit")
+            {
+                imageId = PYD_ICO;
+            }
+            
+
+            wxTreeItemId id = this->AppendItem(root, FGetName(file, true), imageId, imageId);
             this->files[id] = file;
         }
     }
@@ -48,13 +61,20 @@ bool ProjectManager::LoadProject(std::string file)
     std::string line;
     while (std::getline(proj, line))
     {
-        if (wxFileExists(line))
+        if (PathFileExistsA(line.c_str()))
         {
             this->main_path = line;
             break;
         }
     }
+    proj.close();
 
+    /*
+    if (FGetExtension(this->main_path) != ".py")
+    {
+        return false;
+    }
+    */
 
     this->DeleteAllItems();
     this->CreateFileTree(FGetParent(file));

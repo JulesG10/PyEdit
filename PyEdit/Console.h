@@ -11,7 +11,6 @@ public:
 	int Run(INT argc, LPWSTR* argv);
 private:
 	BOOL CreateConsole();
-
 	void ExitMessage();
 	void Log(std::string, bool sign);
 	bool debug = false;

@@ -126,12 +126,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\dev\repos\project\PyEdit\include\python_310\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\dev\repos\project\PyEdit\include\python_311\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);D:\dev\repos\project\PyEdit\libs\python_310\python310_d.lib;D:\dev\repos\project\PyEdit\libs\python_310\python3_d.lib;D:\dev\repos\project\PyEdit\libs\python_310\python310.lib;D:\dev\repos\project\PyEdit\libs\python_310\python3.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);D:\dev\repos\project\PyEdit\libs\python_311\python311_d.lib;D:\dev\repos\project\PyEdit\libs\python_311\python311.lib;D:\dev\repos\project\PyEdit\libs\python_311\python3_d.lib;D:\dev\repos\project\PyEdit\libs\python_311\python3.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Console|Win32'">
@@ -140,12 +140,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\dev\repos\project\PyEdit\include\python_310\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\dev\repos\project\PyEdit\include\python_311\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);D:\dev\repos\project\PyEdit\libs\python_310\python310_d.lib;D:\dev\repos\project\PyEdit\libs\python_310\python3_d.lib;D:\dev\repos\project\PyEdit\libs\python_310\python310.lib;D:\dev\repos\project\PyEdit\libs\python_310\python3.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);D:\dev\repos\project\PyEdit\libs\python_311\python311_d.lib;D:\dev\repos\project\PyEdit\libs\python_311\python311.lib;D:\dev\repos\project\PyEdit\libs\python_311\python3_d.lib;D:\dev\repos\project\PyEdit\libs\python_311\python3.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -156,14 +156,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\dev\repos\project\PyEdit\include\python_310\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\dev\repos\project\PyEdit\include\python_311\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);D:\dev\repos\project\PyEdit\libs\python_310\python310.lib;D:\dev\repos\project\PyEdit\libs\python_310\python3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);D:\dev\repos\project\PyEdit\libs\python_311\python311.lib;D:\dev\repos\project\PyEdit\libs\python_311\python3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -172,12 +172,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\dev\repos\project\PyEdit\include\python_310\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\dev\repos\project\PyEdit\include\python_311\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);D:\dev\repos\project\PyEdit\libs\python_310\python310_d.lib;D:\dev\repos\project\PyEdit\libs\python_310\python3_d.lib;D:\dev\repos\project\PyEdit\libs\python_310\python310.lib;D:\dev\repos\project\PyEdit\libs\python_310\python3.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);D:\dev\repos\project\PyEdit\libs\python_311\python311_d.lib;D:\dev\repos\project\PyEdit\libs\python_311\python311.lib;D:\dev\repos\project\PyEdit\libs\python_311\python3_d.lib;D:\dev\repos\project\PyEdit\libs\python_311\python3.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Console|x64'">
@@ -186,12 +186,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\dev\repos\project\PyEdit\include\python_310\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\dev\repos\project\PyEdit\include\python_311\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);D:\dev\repos\project\PyEdit\libs\python_310\python310_d.lib;D:\dev\repos\project\PyEdit\libs\python_310\python3_d.lib;D:\dev\repos\project\PyEdit\libs\python_310\python310.lib;D:\dev\repos\project\PyEdit\libs\python_310\python3.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);D:\dev\repos\project\PyEdit\libs\python_311\python311_d.lib;D:\dev\repos\project\PyEdit\libs\python_311\python311.lib;D:\dev\repos\project\PyEdit\libs\python_311\python3_d.lib;D:\dev\repos\project\PyEdit\libs\python_311\python3.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -202,14 +202,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\dev\repos\project\PyEdit\include\python_310\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\dev\repos\project\PyEdit\include\python_311\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);D:\dev\repos\project\PyEdit\libs\python_310\python310.lib;D:\dev\repos\project\PyEdit\libs\python_310\python3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);D:\dev\repos\project\PyEdit\libs\python_311\python311.lib;D:\dev\repos\project\PyEdit\libs\python_311\python3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -219,6 +219,7 @@
     <ClInclude Include="Editor.h" />
     <ClInclude Include="MainFrame.h" />
     <ClInclude Include="ProjectManager.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Terminal.h" />
   </ItemGroup>
@@ -230,6 +231,15 @@
     <ClCompile Include="MainFrame.cpp" />
     <ClCompile Include="ProjectManager.cpp" />
     <ClCompile Include="Terminal.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="logo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

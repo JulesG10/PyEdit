@@ -1,11 +1,12 @@
 #include "Editor.h"
 
-//https://wiki.wxwidgets.org/WxStyledTextCtrl
-//https://proton-ce.sourceforge.net/rc/scintilla/pyframe/www.pyframe.com/stc/index-2.html
-Editor::Editor(wxWindow* window) : wxStyledTextCtrl(window, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNO_BORDER)
+// https://wiki.wxwidgets.org/WxStyledTextCtrl
+// https://docs.wxwidgets.org/trunk/classwx_styled_text_ctrl.html#Words
+// https://proton-ce.sourceforge.net/rc/scintilla/pyframe/www.pyframe.com/stc/index-2.html
+Editor::Editor(wxWindow* window, std::string theme) : wxStyledTextCtrl(window, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNO_BORDER)
 {
 	this->SetupLexer();
-    this->LoadTheme(wxString(""));
+    this->LoadTheme(theme);
 }
 
 Editor::~Editor()
@@ -20,6 +21,24 @@ void Editor::OnChange(wxStyledTextEvent& e)
     if (this->saveAuto)
     {
         this->SaveFile();
+    }
+
+    int currentPos = this->GetCurrentPos();
+    int wordStartPos = this->WordStartPosition(currentPos, true);
+
+    int lenEntered = currentPos - wordStartPos;
+
+    //this->BraceHighlight(wordStartPos, currentPos);
+    if (lenEntered > 0)
+    {
+        if (this->compChange)
+        {
+            std::sort(this->completionData.begin(), this->completionData.end());
+            this->comp = "";
+            std::for_each(this->completionData.begin(), this->completionData.end(), [&](std::string s) { this->comp += s + " ";  });
+            this->compChange = false;
+        }
+        this->AutoCompShow(lenEntered, this->comp);
     }
 }
 
@@ -63,13 +82,29 @@ void Editor::OnCharAdded(wxStyledTextEvent& e)
     //this->BraceHighlight(this->GetCurrentPos()-1, this->GetCurrentPos());
 }
 
-bool Editor::LoadTheme(wxString themePath)
+bool Editor::CreateThemeFile(std::string path)
 {
-    this->SetupFold(wxColor(255, 255, 255), wxColor(150, 150, 150));
-    this->SetupLineNum(wxColour(75, 75, 75), wxColour(220, 220, 220));
+    std::ofstream ofs(path);
+    if (!ofs.good())
+    {
+        return false;
+    }
 
+    for (auto i = themeNames.begin(); i != themeNames.end(); ++i)
+    {
+        ofs << i->first << "=" << "#FFFFFF" << std::endl;
+    }
+    ofs << "fold=#FFFFFF;#FFFFFF" << std::endl;
+    ofs << "linenum=#FFFFFF;#FFFFFF" << std::endl;
+    ofs << "caret=#none;#FFFFFF" << std::endl;
+    ofs << "caretline=#none;#FFFFFF" << std::endl;
 
-    StyleSetBackground(wxSTC_STYLE_INDENTGUIDE, wxColor(200, 200, 200));
+    ofs.close();
+
+}
+
+bool Editor::LoadTheme(std::string themePath)
+{
     SetIndentationGuides(wxSTC_IV_REAL);
     SetTabIndents(true);
     SetBackSpaceUnIndents(true);
@@ -77,99 +112,97 @@ bool Editor::LoadTheme(wxString themePath)
 
     SetUseTabs(true);
     SetTabWidth(4);
-    
+
     SetWrapMode(wxSTC_WRAP_WORD);
 
     SetCaretLineVisible(true);
-    SetCaretLineBackground(wxColor(250, 250, 255));
+    SetCaretWidth(2);
     
+
+    wxFont font = wxFont(11, wxFONTFAMILY_SCRIPT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, "Consolas");
+    StyleSetFont(wxSTC_STYLE_DEFAULT, font);
+    StyleSetFont(wxSTC_C_WORD, font);
+
     
-    wxFont monospace(11, wxFONTFAMILY_TELETYPE, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, "Consolas");
-    StyleSetFont(wxSTC_STYLE_DEFAULT, monospace);
-    StyleSetFont(wxSTC_C_WORD, monospace);
-
-
     StyleClearAll();
+    std::ifstream ifs(themePath);
+    if (!ifs.good())
+    {
+        ifs.close();
+        return false;
+    }
 
+   
 
-    // python styles
-    /*
- wxSTC_P_DEFAULT 0
- wxSTC_P_COMMENTLINE 1
- wxSTC_P_NUMBER 2
- wxSTC_P_STRING 3
- wxSTC_P_CHARACTER 4
- wxSTC_P_WORD 5
- wxSTC_P_TRIPLE 6
- wxSTC_P_TRIPLEDOUBLE 7
- wxSTC_P_CLASSNAME 8
- wxSTC_P_DEFNAME 9
- wxSTC_P_OPERATOR 10
- wxSTC_P_IDENTIFIER 11
- wxSTC_P_COMMENTBLOCK 12
- wxSTC_P_STRINGEOL 13
- wxSTC_P_WORD2 14
- wxSTC_P_DECORATOR 15
-    */
+    std::string line;
+    while (std::getline(ifs, line))
+    {
+        auto splitLine = split(line, "=");
+        if (splitLine.size() == 2)
+        {
+            std::string name = splitLine[0];
 
-    /*
-    
-    [monokai]
-normal-foreground= #F8F8F2
-normal-background= #272822
+            auto it = themeNames.find(name);
+            auto type = split(name, "-");
+            auto colors = split(splitLine[1], ";");
 
-keyword-foreground= #F92672
-keyword-background= #272822
+            if (colors.size() > 0)
+            {
+               
+                if (type.size() == 2 && it != themeNames.end() )
+                {
+                    std::string bf = type[0];
 
-builtin-foreground= #66D9EF
-builtin-background= #272822
+                    if (bf == "foreground")
+                    {
+                        StyleSetForeground(it->second, GetColor(colors[0]));
+                    }
+                    else if (bf == "background")
+                    {
+                        StyleSetBackground(it->second, GetColor(colors[0]));
+                    }
+                }
+                else if(type.size() == 1)
+                {
+                    if (type[0] == "fold" && colors.size() > 1)
+                    {
+                        this->SetupFold(GetColor(colors[0]), GetColor(colors[1]));
+                    }
+                    else if (type[0] == "linenum" && colors.size() > 1)
+                    {
+                        this->SetupLineNum(GetColor(colors[0]), GetColor(colors[1]));
+                    }
+                    else if (type[0] == "caretline")
+                    {
+                        wxColour color = GetColor(colors[0]);
+                        SetCaretLineBackground(color);
+                        SetCaretLineBackAlpha(color.Alpha());
+                    }
+                    else if (type[0] == "caret")
+                    {
+                        SetCaretForeground(GetColor(colors[0]));
+                    }
+                    else if (type[0] == "selection" && colors.size()>1)
+                    {
+                        if (colors[0] != "#none")
+                        {
+                            SetSelForeground(false, GetColor(colors[0]));
+                        }
 
-comment-foreground= #75715E
-comment-background= #272822
+                        if (colors[1] != "#none")
+                        {
+                            SetSelBackground(false, GetColor(colors[1]));
+                        }
 
-string-foreground= #FD971F
-string-background= #272822
-
-definition-foreground= #A6E22E
-definition-background= #272822
-
-hilite-foreground= #F8F8F2
-hilite-background= gray
-
-break-foreground= black
-break-background= #ffff55
-
-hit-foreground= #F8F8F2
-hit-background= #171812
-
-error-foreground= #ff3338
-error-background= #272822
-
-cursor-foreground= #F8F8F2
-
-stdout-foreground= #DDDDDD
-stdout-background= #272822
-
-stderr-foreground= #ff3338
-stderr-background= #272822
-
-console-foreground= #75715E
-console-background= #272822
-    */
-
-     /*
-    StyleSetForeground(wxSTC_C_GLOBALCLASS, wxColor(_("#ef0000")));
-    StyleSetBold(wxSTC_C_COMMENTDOCKEYWORD, true);
-    StyleSetBold(wxSTC_C_COMMENTDOCKEYWORDERROR, true);
-    StyleSetItalic(wxSTC_C_WORD2, true);
-    StyleSetUnderline(wxSTC_C_COMMENTDOCKEYWORDERROR, true);
-    */
-
-    StyleSetBackground(wxSTC_STYLE_BRACELIGHT, wxColor(230, 230, 230));
-    StyleSetForeground(wxSTC_STYLE_BRACELIGHT, wxColor(0, 100, 100));
-    StyleSetForeground(wxSTC_STYLE_BRACEBAD, wxColor(200, 0, 0));
-
-    return false;
+                    }
+                }
+            }
+        }
+    }
+    ifs.close();
+    this->Refresh();
+    //StyleSetUnderline(wxSTC_ERR_PYTHON, true);
+    return true;
 }
 
 void Editor::LoadFile(const wxString& file)
@@ -316,21 +349,56 @@ void Editor::SetupLineNum(wxColor fg, wxColor bg)
 
 void Editor::SetupLexer()
 {
-	this->SetCodePage(wxSTC_CP_UTF8);
-	this->SetLexer(wxSTC_LEX_PYTHON);
-	this->SetLexerLanguage("python");
+    this->SetCodePage(wxSTC_CP_UTF8);
+    this->SetLexer(wxSTC_LEX_PYTHON);
+    this->SetLexerLanguage("python");
 
-	const wxString pyKeywords = "False await else import pass None break except in raise True class finally is return and continue for lambda try as def from nonlocal while assert del global not with async elif if or yield";
-	this->SetKeyWords(0, pyKeywords);
+    this->completionData = {
+    "False",
+    "await",
+    "else",
+    "import",
+    "pass",
+    "None",
+    "break",
+    "except",
+    "in",
+    "raise",
+    "True",
+    "class",
+    "finally",
+    "is",
+    "return",
+    "and",
+    "continue",
+    "for",
+    "lambda",
+    "try",
+    "as",
+    "def",
+    "from",
+    "nonlocal",
+    "while",
+    "assert",
+    "del",
+    "global",
+    "not",
+    "with",
+    "async",
+    "elif",
+    "if",
+    "or",
+    "yield",
+    };
+    std::sort(this->completionData.begin(), this->completionData.end());
+
+    std::string keywords = "";
+    std::for_each(this->completionData.begin(), this->completionData.end(), [&](std::string s) { keywords += s + " "; });
+    this->SetKeyWords(0, keywords);
 }
-
-
-
 
 BEGIN_EVENT_TABLE(Editor, wxStyledTextCtrl)
     EVT_STC_CHARADDED(wxID_ANY, Editor::OnCharAdded)
     EVT_STC_CHANGE(wxID_ANY, Editor::OnChange)
     EVT_STC_MARGINCLICK(wxID_ANY, Editor::OnMarginClick)
-    
-    //EVT_STC_AUTOCOMP_COMPLETED(wxID_ANY, Editor::OnAutoComplete)
 END_EVENT_TABLE()

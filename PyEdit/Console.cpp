@@ -24,17 +24,7 @@ int Console::Run(INT argc, LPWSTR* argv)
       
         if (wxFileExists(arg) && PathFindExtensionA(arg.c_str()) != ".py")
         {
-            DWORD fsize = 0;
-            LPSTR file;
-
-            LPSTR absolutePath = new CHAR[MAX_PATH];
-            if (!GetFullPathNameA(arg.c_str(), MAX_PATH, absolutePath, &file))
-            {
-                this->Log("Erreur, " + std::system_category().message(GetLastError()), false);
-                this->ExitMessage();
-                return 1;
-            }
-            arg = std::string(absolutePath);
+            arg = FAbsolute(arg);
 
             if (std::string(wxGetCwd()) != FGetParent(arg) && !this->nocwd)
             {
@@ -51,15 +41,39 @@ int Console::Run(INT argc, LPWSTR* argv)
             
             //this->Log("Démarage dans le thread: " + std::string(std::this_thread::get_id());
 
+            
             py::scoped_interpreter guard{};
-            this->Log("Initialisation de l'interpreter", true);
-
             try {
+                this->Log("Initialisation de l'interpreter", true);
+
                 py::eval_file(arg);
             }
             catch (py::error_already_set& err)
             {
                 this->Log(err.what(), false);
+                    
+                // https://docs.python.org/3/library/inspect.html
+                
+                /*int errLine = err.trace().attr("tb_lineno").cast<int>();
+                this->Log("line: " + std::to_string(errLine), false);
+
+                int lastByteCode = err.trace().attr("tb_lasti").cast<int>();
+                this->Log("bytecode: " + (char)lastByteCode, false);
+
+                py::object tbframe = err.trace().attr("tb_frame");
+                if (!tbframe.is_none())
+                {
+                    auto code = tbframe.attr("f_code");
+                    if (!code.is_none())
+                    {
+                        std::cout << code.attr("co_filename").cast<std::string>() << std::endl;
+                        std::cout << code.attr("co_name").cast<std::string>() << std::endl;
+                        std::cout << code.attr("co_qualname").cast<std::string>() << std::endl;
+                        std::cout << code.attr("co_stacksize").cast<int>() << std::endl;
+                    }
+                }
+                */
+            
             }
             
             /*catch (py::error_already_set& pyerr)
